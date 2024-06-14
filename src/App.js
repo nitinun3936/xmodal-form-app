@@ -56,14 +56,17 @@ function App() {
         break;
     }
 
-    if (id === 'dob' && error) {
-      alert(error); // Show alert for invalid date of birth
-    } else if (id === 'phone' && error) {
-      alert(error); // Show alert for invalid phone number
-    } else {
+    if (error) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         [id]: error
+      }));
+      setErrorMessages(error);
+      alert(error); // Show alert for invalid fields
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [id]: ''
       }));
     }
   };
@@ -82,8 +85,8 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
     if (validateForm()) {
-      setFormSubmitted(true);
       setFormData({
         username: '',
         email: '',
@@ -92,9 +95,9 @@ function App() {
       });
       setErrors({});
       setErrorMessages('');
+      setIsModalOpen(false);
     }
   };
-  
 
   return (
     <div className="App">
@@ -115,6 +118,7 @@ function App() {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.username && <div className="error">{errors.username}</div>}
               </label>
 
               <label>
@@ -126,6 +130,7 @@ function App() {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.email && <div className="error">{errors.email}</div>}
               </label>
 
               <label>
@@ -137,6 +142,7 @@ function App() {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.dob && <div className="error">{errors.dob}</div>}
               </label>
 
               <label>
@@ -148,9 +154,10 @@ function App() {
                   onChange={handleInputChange}
                   required
                 />
+                {errors.phone && <div className="error">{errors.phone}</div>}
               </label>
 
-              <button type="submit" className="open-form-button">Submit</button>
+              <button type="submit" className="submit-button">Submit</button>
             </form>
             {errorMessages && (
               <div className="popup">
